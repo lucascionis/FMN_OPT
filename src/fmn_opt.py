@@ -119,7 +119,8 @@ class FMNOpt:
                 'distance': [],
                 'inputs': [],
                 'labels': [],
-                'best_adv': []
+                'best_adv': [],
+                'best_distance': None
             })
 
     def _boundary_search(self, inputs, labels):
@@ -376,6 +377,7 @@ class FMNOpt:
             print("Best distance: {}".format(torch.median(_best_distance).item()))
 
             self.attack_data[batch_idx]['best_adv'] = self.init_trackers['best_adv'].clone()
+            self.attack_data[batch_idx]['best_distance'] = torch.median(_best_distance).item()
 
         if not os.path.exists('attack_data'):
             os.mkdir('attack_data')
