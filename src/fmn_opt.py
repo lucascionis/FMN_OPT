@@ -233,7 +233,7 @@ class FMNOpt:
             multiplier = 1 if self.targeted else -1
 
             delta.requires_grad_(True)
-
+            """
             # try to estimate the distance to boundary
             delta_norm = delta.data.flatten(1).norm(p=self.norm, dim=1)
             adv_inputs = inputs + delta
@@ -254,7 +254,7 @@ class FMNOpt:
             delta_grad = delta.grad.data
             distance_to_boundary = loss.detach().abs() / delta_grad.flatten(1).norm(p=dual, dim=1).clamp_(min=1e-12)
             distance_to_boundary.requires_grad_(True)
-
+            """
             # Initialize optimizer
             self._init_optimizer(objective=delta)
 
@@ -268,7 +268,7 @@ class FMNOpt:
             '''
             # TODO: try to implement an optimizer for gamma
 
-            # self._init_scheduler(_optimizer_gamma)
+            self._init_scheduler()
 
 
             print("Attack on batch #{}".format(batch_idx))
@@ -354,8 +354,6 @@ class FMNOpt:
                                                    dim=1, ord=self.norm)
                 # print("Best distance: {}".format(torch.median(_distance).item()))
 
-                # _optimizer_gamma.step()
-                #_optimizer_gamma.zero_grad()
 
                 if self.scheduler_name == 'ReduceLROnPlateau':
                     self._scheduler_step(torch.median(_distance).item())
@@ -374,7 +372,7 @@ class FMNOpt:
 
             elapsed = end - start
             print("Elapsed time: {}".format(elapsed))
-            print("Best distance: {}".format(torch.median(_best_distance).item()))
+            #print("Best distance: {}".format(torch.median(_best_distance).item()))
 
             self.attack_data[batch_idx]['best_adv'] = self.init_trackers['best_adv'].clone()
             self.attack_data[batch_idx]['best_distance'] = torch.median(_best_distance).item()
