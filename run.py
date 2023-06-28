@@ -3,7 +3,7 @@ import pickle
 import torch
 import torchvision
 from robustbench.utils import load_model as rb_load_model
-
+import numpy as np
 from src.fmn_opt import FMNOpt
 
 
